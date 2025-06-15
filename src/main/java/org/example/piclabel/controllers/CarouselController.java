@@ -2,6 +2,7 @@ package org.example.piclabel.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,6 +26,9 @@ public class CarouselController {
     @FXML
     private Button forwardButton;
 
+    @FXML
+    private Label indexLabel;
+
     private Stage primaryStage;
 
     private List<File> imageFiles = new ArrayList<>();
@@ -34,6 +38,7 @@ public class CarouselController {
         if (index >= 0 && index < imageFiles.size()) {
             File file = imageFiles.get(index);
             Image image = new Image(file.toURI().toString());
+            indexLabel.setText((index + 1) + "/" + imageFiles.size());
             imageView.setImage(image);
         }
     }

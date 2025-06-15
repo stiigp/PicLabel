@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
+
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.piclabel.controllers.CarouselController">
     <children>
         <VBox alignment="CENTER" minHeight="483.0" minWidth="675.0" prefHeight="483.0" prefWidth="675.0" spacing="20.0">
@@ -15,12 +17,16 @@
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
             <children>
-
-                <ImageView fx:id="imageView" fitHeight="318.0" fitWidth="499.0" pickOnBounds="true" preserveRatio="true" />
+                <StackPane maxHeight="318.0" minHeight="318.0" prefHeight="318.0">
+                   <children>
+                       <ImageView fx:id="imageView" fitHeight="318.0" fitWidth="499.0" pickOnBounds="true" preserveRatio="true" />
+                   </children>
+                </StackPane>
+            <Label fx:id="indexLabel" />
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="801.0" style="-fx-spacing: 50;">
                     <children>
-                        <Button fx:id="backwardButton" onAction="#goBackward" minWidth="50.0" mnemonicParsing="false" text="&lt;" />
-                        <Button fx:id="forwardButton" onAction="#goForward" minWidth="50.0" mnemonicParsing="false" text="&gt;" />
+                        <Button fx:id="backwardButton" minWidth="50.0" mnemonicParsing="false" onAction="#goBackward" text="&lt;" />
+                        <Button fx:id="forwardButton" minWidth="50.0" mnemonicParsing="false" onAction="#goForward" text="&gt;" />
                     </children>
                 </HBox>
             </children>
