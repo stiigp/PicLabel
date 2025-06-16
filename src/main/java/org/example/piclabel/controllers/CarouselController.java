@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.example.piclabel.utils.MetadataUtil;
 
 import java.io.File;
 import java.util.List;
