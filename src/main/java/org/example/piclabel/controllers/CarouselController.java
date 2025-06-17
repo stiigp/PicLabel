@@ -10,7 +10,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.piclabel.utils.MetadataUtil;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -33,14 +37,15 @@ public class CarouselController {
     private Stage primaryStage;
 
     private List<File> imageFiles = new ArrayList<>();
+    private List<File> originalImages = new ArrayList<>();
     private int currentIndex = 0;
 
     public void showImage(int index) {
         if (index >= 0 && index < imageFiles.size()) {
             File file = imageFiles.get(index);
-            Image image = new Image(file.toURI().toString());
+            Image javafxImage = new Image(file.toURI().toString());
             indexLabel.setText((index + 1) + "/" + imageFiles.size());
-            imageView.setImage(image);
+            imageView.setImage(javafxImage);
         }
     }
 
@@ -114,5 +119,13 @@ public class CarouselController {
 
     public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
+    }
+
+    public List<File> getOriginalImages() {
+        return originalImages;
+    }
+
+    public void setOriginalImages(List<File> originalImages) {
+        this.originalImages = originalImages;
     }
 }

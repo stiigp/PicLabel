@@ -35,12 +35,14 @@ public class MetadataUtil {
     private static Date getBestDate(Metadata metadata) {
         ExifSubIFDDirectory subIfd = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
         if (subIfd != null) {
+//            System.out.println("subifd!");
             Date date = subIfd.getDateOriginal();
             if (date != null) return date;
         }
 
         ExifIFD0Directory ifd0 = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
         if (ifd0 != null) {
+//            System.out.println("ifd0!");
             Date date = ifd0.getDate(ExifIFD0Directory.TAG_DATETIME);
             if (date != null) return date;
         }
@@ -66,8 +68,8 @@ public class MetadataUtil {
             if (date != null) {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-                String dataFormatada = formatter.format(date);
-                System.out.println("Data formatada: " + dataFormatada);
+                dataString = formatter.format(date);
+                System.out.println("Data formatada: " + dataString);
             } else {
                 System.out.println("date nulo!");
             }

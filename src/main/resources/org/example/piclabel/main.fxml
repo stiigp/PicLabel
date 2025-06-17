@@ -32,5 +32,8 @@
             </Menu>
         </menus>
     </MenuBar>
-    <fx:include source="components/carousel.fxml" fx:id="carousel"/>
+    <HBox>
+        <AnchorPane fx:id="carousel"/>
+        <AnchorPane fx:id="controlpanel"/>
+    </HBox>
 </VBox>
