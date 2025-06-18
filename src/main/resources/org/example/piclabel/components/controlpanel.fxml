@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="200.0" minWidth="100.0" prefHeight="200.0" prefWidth="120.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.piclabel.controllers.ControlpanelController">
+<AnchorPane minHeight="200.0" minWidth="100.0" prefHeight="247.0" prefWidth="152.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.piclabel.controllers.ControlpanelController">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0" style="-fx-spacing: 20;">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="152.0" style="-fx-spacing: 20;">
          <children>
             <MenuButton text="Canto">
                <items>
@@ -18,7 +19,12 @@
             <Button fx:id="addDateButton" mnemonicParsing="false" onAction="#addDate" text="Adicionar Data" />
             <Button fx:id="addAllDatesButton" mnemonicParsing="false" onAction="#addAllDates" text="Adicionar a todas" />
             <Button fx:id="exportButton" mnemonicParsing="false" onAction="#exportImages" text="Salvar fotos" />
+            <Label fx:id="loadingLabel" />
+            <ProgressBar fx:id="loadingProgress" prefWidth="200.0" progress="0.0" />
          </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
       </VBox>
    </children>
 </AnchorPane>

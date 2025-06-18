@@ -1,16 +1,23 @@
 package org.example.piclabel.controllers;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import org.example.piclabel.utils.MetadataUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import javafx.scene.control.Label;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +36,12 @@ public class ControlpanelController {
     private Button exportButton;
 
     @FXML
+    private ProgressBar loadingProgress;
+
+    @FXML
+    private Label loadingLabel;
+
+    @FXML
     private CarouselController carouselController;
 
     public static final String TOP_RIGHT = "top_right";
@@ -45,12 +58,51 @@ public class ControlpanelController {
 
     @FXML
     public void addAllDates() {
-        for (int i = 0; i < carouselController.getOriginalImages().size(); i++) {
-            addDate(corner, i);
-        }
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
 
-        carouselController.showImage(0);
-        carouselController.setCurrentIndex(0);
+                Platform.runLater(() -> {
+
+                    GaussianBlur blur = new GaussianBlur(15);
+
+                    ColorAdjust darken = new ColorAdjust();
+                    darken.setBrightness(-0.4); // escurece
+
+                    // Encadeando os efeitos
+                    darken.setInput(blur); // aplica blur primeiro, depois escurece
+
+                    // Aplicando ao ImageView
+                    carouselController.getImageView().setEffect(darken);
+
+                    carouselController.getBackwardButton().setDisable(true);
+                    carouselController.getForwardButton().setDisable(true);
+                    loadingProgress.setMinHeight(15.0);
+                });
+
+                int total = carouselController.getOriginalImages().size();
+
+                for (int i = 0; i < total; i++) {
+                    updateProgress(i, total);
+                    addDate(corner, i);
+                }
+
+                Platform.runLater(() -> {
+                    carouselController.showImage(0);
+                    carouselController.setCurrentIndex(0);
+                    carouselController.getImageView().setEffect(null);
+                    carouselController.getBackwardButton().setDisable(false);
+                    carouselController.getForwardButton().setDisable(false);
+                    loadingProgress.setMinHeight(0.0);
+                });
+
+                return null;
+            }
+        };
+
+        loadingProgress.progressProperty().bind(task.progressProperty());
+
+        new Thread(task).start();
     }
 
     @FXML
@@ -131,15 +183,36 @@ public class ControlpanelController {
             g2d.drawString(dateString, x, y);
             g2d.dispose();
 
-            file = new File("C:\\Users\\Usuario\\Desktop\\CODING\\FERRO3\\PicLabel\\src\\main\\resources\\pics\\" + file.getName());
+            String userHome = System.getProperty("user.home");
+            Path appImagesPath = Paths.get(userHome, "PicLabel", "processed");
 
-            ImageIO.write(bimg, "jpg", file);
+            Files.createDirectories(appImagesPath);
 
-            carouselController.getImageFiles().set(index, file);
-            carouselController.showImage(index);
+            file = new File(appImagesPath.toFile(), file.getName());
 
+            String ext = getFileExtension(file);
+
+            ImageIO.write(bimg, ext, file);
+
+            // esse platform.runlater é feito pois essa func é chamada dentro de uma task separada
+            // e as alterações na UI tem que ser feitas por meio de platform.runlater para serem feitas na thread main
+            File finalFile = file;
+            Platform.runLater(() -> {
+                carouselController.getImageFiles().set(index, finalFile);
+                carouselController.showImage(index);
+            });
         } catch (IOException ioe) {
             ioe.printStackTrace();
+        }
+    }
+
+    public static String getFileExtension(File file) {
+        String name = file.getName();
+        int lastDot = name.lastIndexOf('.');
+        if (lastDot > 0 && lastDot < name.length() - 1) {
+            return name.substring(lastDot + 1).toLowerCase();
+        } else {
+            return ""; // sem extensão
         }
     }
 
@@ -173,5 +246,13 @@ public class ControlpanelController {
 
     public void setCornerBottomRight() {
         this.corner = BOTTOM_RIGHT;
+    }
+
+    public Label getLoadingLabel() {
+        return loadingLabel;
+    }
+
+    public void setLoadingLabel(Label loadingLabel) {
+        this.loadingLabel = loadingLabel;
     }
 }
