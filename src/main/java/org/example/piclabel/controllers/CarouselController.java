@@ -65,6 +65,11 @@ public class CarouselController {
         }
     }
 
+    public void enableButtons() {
+        forwardButton.setDisable(false);
+        backwardButton.setDisable(false);
+    }
+
     public MenuItem getOpenFileItem() {
         return openFileItem;
     }

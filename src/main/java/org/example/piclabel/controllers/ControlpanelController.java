@@ -4,9 +4,12 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.example.piclabel.utils.MetadataUtil;
 
 import javax.imageio.ImageIO;
@@ -25,7 +28,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ControlpanelController {
@@ -40,10 +42,13 @@ public class ControlpanelController {
     private Button exportButton;
 
     @FXML
+    private MenuButton cornerMenu;
+
+    @FXML
     private ProgressBar loadingProgress;
 
     @FXML
-    private Label loadingLabel;
+    private Label warningLabel;
 
     @FXML
     private CarouselController carouselController;
@@ -111,42 +116,10 @@ public class ControlpanelController {
         new Thread(task).start();
     }
 
-    @FXML
-    public void exportImages() {
-        List<File> imageFiles = carouselController.getImageFiles();
-
-        String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
-        File baseDir = new File(desktopPath, "PicLabelExports");
-
-        if (!baseDir.exists()) {
-            baseDir.mkdirs();
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        String timestamp = LocalDateTime.now().format(formatter);
-        File exportDir = new File(baseDir, "export_" + timestamp);
-
-        if (!exportDir.exists()) {
-            exportDir.mkdirs();
-        }
-
-        for (File image : imageFiles) {
-            Path sourcePath = image.toPath();
-            Path targetPath = exportDir.toPath().resolve(image.getName());
-
-            try {
-                Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                System.err.println("Erro ao exportar " + image.getName());
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("Exportação concluída em: " + exportDir.getAbsolutePath());
-    }
-
     public void addDate(String corner, int index) {
         File file = carouselController.getOriginalImages().get(index);
+
+        enableButtons();
 
         try {
             BufferedImage bimg = ImageIO.read(file);
@@ -228,9 +201,48 @@ public class ControlpanelController {
                 carouselController.getImageFiles().set(index, finalFile);
                 carouselController.showImage(index);
             });
+
+            exportButton.setDisable(false);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+
+    @FXML
+    public void exportImages() {
+        VBox.setVgrow(warningLabel, Priority.ALWAYS);
+        List<File> imageFiles = carouselController.getImageFiles();
+
+        String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
+        File baseDir = new File(desktopPath, "PicLabelExports");
+
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        File exportDir = new File(baseDir, "export_" + timestamp);
+
+        if (!exportDir.exists()) {
+            exportDir.mkdirs();
+        }
+
+        for (File image : imageFiles) {
+            Path sourcePath = image.toPath();
+            Path targetPath = exportDir.toPath().resolve(image.getName());
+
+            try {
+                Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                System.err.println("Erro ao exportar " + image.getName());
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Exportação concluída em: " + exportDir.getAbsolutePath());
+        warningLabel.setText("Exportação concluída em:\n" + exportDir.getPath());
+        exportButton.setDisable(true);
     }
 
     public static String getFileExtension(File file) {
@@ -241,6 +253,13 @@ public class ControlpanelController {
         } else {
             return ""; // sem extensão
         }
+    }
+
+    public void enableButtons() {
+        cornerMenu.setDisable(false);
+        addDateButton.setDisable(false);
+        addAllDatesButton.setDisable(false);
+        exportButton.setDisable(false);
     }
 
     public CarouselController getCarouselController() {
@@ -275,11 +294,11 @@ public class ControlpanelController {
         this.corner = BOTTOM_RIGHT;
     }
 
-    public Label getLoadingLabel() {
-        return loadingLabel;
+    public Label getWarningLabel() {
+        return warningLabel;
     }
 
-    public void setLoadingLabel(Label loadingLabel) {
-        this.loadingLabel = loadingLabel;
+    public void setWarningLabel(Label warningLabel) {
+        this.warningLabel = warningLabel;
     }
 }

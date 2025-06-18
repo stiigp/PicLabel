@@ -77,6 +77,8 @@ public class MainController {
             originalImages.addAll(selectedFiles);
             carouselController.setCurrentIndex(0);
             carouselController.showImage(carouselController.getCurrentIndex());
+            carouselController.enableButtons();
+            controlpanelController.enableButtons();
         }
     }
 

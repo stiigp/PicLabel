@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="200.0" minWidth="100.0" prefHeight="247.0" prefWidth="152.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.piclabel.controllers.ControlpanelController">
+<AnchorPane minHeight="200.0" minWidth="100.0" prefHeight="351.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.piclabel.controllers.ControlpanelController">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="152.0" style="-fx-spacing: 20;">
+      <VBox alignment="CENTER" prefHeight="351.0" prefWidth="200.0" style="-fx-spacing: 20;">
          <children>
-            <MenuButton text="Canto">
+            <MenuButton fx:id="cornerMenu" disable="true" text="Canto">
                <items>
                   <MenuItem onAction="#setCornerTopLeft" text="Canto superior esquerdo" />
                   <MenuItem onAction="#setCornerTopRight" text="Canto superior direito" />
@@ -16,11 +16,14 @@
                   <MenuItem onAction="#setCornerBottomRight" text="Canto inferior direito" />
                </items>
             </MenuButton>
-            <Button fx:id="addDateButton" mnemonicParsing="false" onAction="#addDate" text="Adicionar Data" />
-            <Button fx:id="addAllDatesButton" mnemonicParsing="false" onAction="#addAllDates" text="Adicionar a todas" />
-            <Button fx:id="exportButton" mnemonicParsing="false" onAction="#exportImages" text="Salvar fotos" />
-            <Label fx:id="loadingLabel" />
-            <ProgressBar fx:id="loadingProgress" prefWidth="200.0" progress="0.0" />
+            <Button fx:id="addDateButton" disable="true" mnemonicParsing="false" onAction="#addDate" text="Adicionar Data" />
+            <Button fx:id="addAllDatesButton" disable="true" mnemonicParsing="false" onAction="#addAllDates" text="Adicionar a todas" />
+            <Button fx:id="exportButton" disable="true" mnemonicParsing="false" onAction="#exportImages" text="Salvar fotos" />
+            <ProgressBar fx:id="loadingProgress" prefHeight="0.0" prefWidth="200.0" progress="0.0" />
+            <Label fx:id="warningLabel" maxWidth="230.0" wrapText="true">
+               <VBox.vgrow>
+               </VBox.vgrow>
+            </Label>
          </children>
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
