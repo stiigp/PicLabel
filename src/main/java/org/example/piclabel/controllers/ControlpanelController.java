@@ -9,6 +9,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ControlpanelController {
 
@@ -17,6 +24,9 @@ public class ControlpanelController {
 
     @FXML
     private Button addAllDatesButton;
+
+    @FXML
+    private Button exportButton;
 
     @FXML
     private CarouselController carouselController;
@@ -41,6 +51,40 @@ public class ControlpanelController {
 
         carouselController.showImage(0);
         carouselController.setCurrentIndex(0);
+    }
+
+    @FXML
+    public void exportImages() {
+        List<File> imageFiles = carouselController.getImageFiles();
+
+        String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
+        File baseDir = new File(desktopPath, "PicLabelExports");
+
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        File exportDir = new File(baseDir, "export_" + timestamp);
+
+        if (!exportDir.exists()) {
+            exportDir.mkdirs();
+        }
+
+        for (File image : imageFiles) {
+            Path sourcePath = image.toPath();
+            Path targetPath = exportDir.toPath().resolve(image.getName());
+
+            try {
+                Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                System.err.println("Erro ao exportar " + image.getName());
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Exportação concluída em: " + exportDir.getAbsolutePath());
     }
 
     public void addDate(String corner, int index) {

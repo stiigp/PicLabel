@@ -17,6 +17,7 @@
             </MenuButton>
             <Button fx:id="addDateButton" mnemonicParsing="false" onAction="#addDate" text="Adicionar Data" />
             <Button fx:id="addAllDatesButton" mnemonicParsing="false" onAction="#addAllDates" text="Adicionar a todas" />
+            <Button fx:id="exportButton" mnemonicParsing="false" onAction="#exportImages" text="Salvar fotos" />
          </children>
       </VBox>
    </children>
