@@ -12,6 +12,10 @@ import org.example.piclabel.utils.MetadataUtil;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import javafx.scene.control.Label;
+
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +52,8 @@ public class ControlpanelController {
     public static final String TOP_LEFT = "top_left";
     public static final String BOTTOM_RIGHT = "bottom_right";
     public static final String BOTTOM_LEFT = "bottom_left";
+
+    private static final int CONST = 35;
 
     private String corner = BOTTOM_RIGHT;
 
@@ -155,33 +161,54 @@ public class ControlpanelController {
 
             switch (corner) {
                 case TOP_LEFT:
-                    x = (int) (20 * coefficient);
-                    y = (int) (65 * coefficient);
+                    x = (int) ((CONST - 32) * coefficient);
+                    y = (int) ((CONST - 5) * coefficient);
                     break;
                 case TOP_RIGHT:
-                    x = (int) (width - (310 * coefficient));
-                    y = (int) (65 * coefficient);
+                    x = (int) (width - ((CONST + 180) * coefficient));
+                    y = (int) ((CONST - 5) * coefficient);
                     break;
                 case BOTTOM_LEFT:
-                    x = (int) (20 * coefficient);
-                    y = (int) (height - (20 * coefficient));
+                    x = (int) ((CONST - 32) * coefficient);
+                    y = (int) (height - ((CONST - 30) * coefficient));
                     break;
                 case BOTTOM_RIGHT:
-                    x = (int) (width - (310 * coefficient));
-                    y = (int) (height - (20 * coefficient));
+                    x = (int) (width - ((CONST + 180) * coefficient));
+                    y = (int) (height - ((CONST - 30) * coefficient));
                     break;
                 default:
-                    x = (int) (width - (310 * coefficient));
-                    y = (int) (height - (20 * coefficient));
+                    x = (int) (width - ((CONST + 180) * coefficient));
+                    y = (int) (height - ((CONST - 30) * coefficient));
                     break;
             }
 
             Graphics2D g2d = bimg.createGraphics();
-            Font font = new Font("Monospaced", Font.BOLD, (int)(50 * coefficient));
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Cor retrô e transparência
+            Color retroColor = new Color(255, 50, 50);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+
+            Font font = new Font("Courier New", Font.BOLD, (int)(CONST * coefficient));
             g2d.setFont(font);
-            g2d.setColor(Color.RED);
-            g2d.drawString(dateString, x, y);
+
+            // Outline (contorno)
+            FontRenderContext frc = g2d.getFontRenderContext();
+            TextLayout textLayout = new TextLayout(dateString, font, frc);
+            AffineTransform transform = AffineTransform.getTranslateInstance(x, y);
+            Shape outline = textLayout.getOutline(transform);
+
+            // Contorno preto
+            g2d.setColor(Color.BLACK);
+            g2d.setStroke(new BasicStroke(2f));
+            g2d.draw(outline);
+
+            // Texto principal
+            g2d.setColor(retroColor);
+            g2d.fill(outline);
+
             g2d.dispose();
+
 
             String userHome = System.getProperty("user.home");
             Path appImagesPath = Paths.get(userHome, "PicLabel", "processed");
