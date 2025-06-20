@@ -32,7 +32,7 @@ public class MainController {
     private void initialize() {
         openFileItem.setOnAction(event -> openFiles());
 
-        // Carregando o carousel.fxml manualmente
+        // manually loading carousel.fxml
         FXMLLoader carouselLoader = new FXMLLoader(getClass().getResource("/org/example/piclabel/components/carousel.fxml"));
         VBox carouselNode = null;
         try {
@@ -42,7 +42,7 @@ public class MainController {
         }
         carouselController = carouselLoader.getController();
 
-        // Carregando o controlpanel.fxml manualmente
+        // manually loading controlpanel.fxml
         FXMLLoader panelLoader = new FXMLLoader(getClass().getResource("/org/example/piclabel/components/controlpanel.fxml"));
         AnchorPane panelNode = null;
         try {
@@ -52,19 +52,19 @@ public class MainController {
         }
         controlpanelController = panelLoader.getController();
 
-        // Injeta a dependência
+        // injects the controller
         controlpanelController.setCarouselController(carouselController);
 
-        // Substitui os nós incluídos automaticamente
+        // swaps the included nodes
         carousel.getChildren().setAll(carouselNode);
         controlpanel.getChildren().setAll(panelNode);
     }
 
     private void openFiles() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Selecionar imagens");
+        fileChooser.setTitle("Select images");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Imagens", "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif")
+                new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif")
         );
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(carouselController.getPrimaryStage());
 

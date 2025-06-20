@@ -251,7 +251,7 @@ public class ControlpanelController {
         if (lastDot > 0 && lastDot < name.length() - 1) {
             return name.substring(lastDot + 1).toLowerCase();
         } else {
-            return ""; // sem extensão
+            return ""; // no extension
         }
     }
 

@@ -15,10 +15,12 @@ import java.util.Date;
 
 public class MetadataUtil {
     public static void printBasicMetadata(File imageFile) {
+
+        // auxiliary method in case you want to know all metadata on the file
+
         try {
             Metadata metadata = ImageMetadataReader.readMetadata(imageFile);
 
-            // Se quiser ver todos os metadados disponíveis:
             for (Directory directory : metadata.getDirectories()) {
                 System.out.println(directory);
                 for (Tag tag : directory.getTags()) {
@@ -47,10 +49,10 @@ public class MetadataUtil {
             if (date != null) return date;
         }
 
-        // caso não haja data de criação da foto emitida pela câmera, recorremos à última data de modificação que fica no directory File
+        // in case there aint a creation date emmited by camera, we end up with the last modification from the File directory
         Directory fileDirectory = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
         if (fileDirectory != null) {
-            // 3 é a tag do last modified date
+            // 3 is last modified date's tag
             return fileDirectory.getDate(3);
         }
 

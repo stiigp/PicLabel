@@ -24,7 +24,7 @@ public class AppCleaner {
 
         Files.walk(folderPath)
                 .filter(p -> !p.equals(folderPath))
-                .sorted(Comparator.reverseOrder()) // remove arquivos antes de diretórios
+                .sorted(Comparator.reverseOrder()) // removes files before removing directories
                 .forEach(path -> {
                     try {
                         Files.delete(path);
